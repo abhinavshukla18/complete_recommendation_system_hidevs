@@ -1,0 +1,97 @@
+{
+  "info": {
+    "name": "Complete Recommendation System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://127.0.0.1:5000"},
+    {"key": "api_key", "value": "mysecret"}
+  ],
+  "item": [
+    {
+      "name": "Health check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/health"
+      }
+    },
+    {
+      "name": "Get recommendations (user 1)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "X-API-Key", "value": "{{api_key}}"}],
+        "url": "{{base_url}}/recommend/1?limit=5"
+      }
+    },
+    {
+      "name": "Get recommendations - unknown user (404)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "X-API-Key", "value": "{{api_key}}"}],
+        "url": "{{base_url}}/recommend/9999"
+      }
+    },
+    {
+      "name": "Get recommendations - bad limit (400)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "X-API-Key", "value": "{{api_key}}"}],
+        "url": "{{base_url}}/recommend/1?limit=0"
+      }
+    },
+    {
+      "name": "Record feedback",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "X-API-Key", "value": "{{api_key}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"user_id\": 1, \"content_id\": 3, \"type\": \"like\", \"rating\": 5}"
+        },
+        "url": "{{base_url}}/feedback"
+      }
+    },
+    {
+      "name": "Record feedback - missing type (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "X-API-Key", "value": "{{api_key}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"user_id\": 1, \"content_id\": 3}"
+        },
+        "url": "{{base_url}}/feedback"
+      }
+    },
+    {
+      "name": "Record feedback - unknown user (404)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "X-API-Key", "value": "{{api_key}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"user_id\": 9999, \"content_id\": 3, \"type\": \"like\", \"rating\": 5}"
+        },
+        "url": "{{base_url}}/feedback"
+      }
+    },
+    {
+      "name": "Metrics",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "X-API-Key", "value": "{{api_key}}"}],
+        "url": "{{base_url}}/metrics"
+      }
+    }
+  ]
+}
